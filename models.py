@@ -13,9 +13,14 @@ class PessoaUSP(models.Model):
     nome = models.CharField(max_length=255)
     nusp = models.CharField(max_length=20)
 
+    class Meta:
+        abstract = True
+
     def __str__(self):
         return self.nome
-Aluno = PessoaUSP
+
+class Aluno(PessoaUSP):
+    pass
 
 class Docente(PessoaUSP):
     departamento = models.CharField(max_length = 10)
@@ -34,20 +39,16 @@ class Unidade(models.Model):
         return self.nome
 
 class Requerimento(models.Model):
-    aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT, related_name='%(class)s_alunos')
+    aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT)
     data_entrada = models.DateTimeField()
     data_parecer = models.DateTimeField()
     data_saida = models.DateTimeField()
+    docente = models.ForeignKey(Docente, on_delete=models.PROTECT)
     observacao = models.TextField()
-    docente_encaminhado = models.ForeignKey(Docente, on_delete=models.PROTECT, related_name='%(class)s_encaminhados')
-    docente_parecerista = models.ForeignKey(Docente, on_delete=models.PROTECT, related_name='%(class)s_pareceristas')
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
 
-    class Meta:
-        abstract = True
-
     def __str__(self):
-        return self.aluno
+        return str(self.aluno)
 
 class RequerimentoAlteracao(Requerimento):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.PROTECT)
