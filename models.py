@@ -11,7 +11,7 @@ OPCOES_DO_PARECER = (
 
 class PessoaUSP(models.Model):
     nome = models.CharField(max_length=255)
-    nusp = models.CharField(max_length=20)
+    nusp = models.CharField(max_length=20, unique=True)
 
     class Meta:
         abstract = True
@@ -33,28 +33,41 @@ class Disciplina(models.Model):
         return self.nome
 
 class Unidade(models.Model):
-    nome = models.CharField(max_length=255)
+    nome = models.CharField(max_length=20)
 
     def __str__(self):
         return self.nome
 
 class Requerimento(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT)
-    data_entrada = models.DateTimeField()
-    data_parecer = models.DateTimeField()
-    data_saida = models.DateTimeField()
+    data_entrada = models.DateTimeField(auto_now=True)
+    data_parecer = models.DateTimeField(blank=True, null=True)
+    data_saida = models.DateTimeField(blank=True, null=True)
     docente = models.ForeignKey(Docente, on_delete=models.PROTECT)
-    observacao = models.TextField()
+    observacao = models.TextField(blank=True)
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
+    
+    class Meta:
+        abstract = True
 
     def __str__(self):
-        return str(self.aluno)
+        return "%s - %s - %s"%(
+            self.aluno.nusp,
+            self.aluno.nome,
+            self.data_entrada.date())
 
 class RequerimentoAlteracao(Requerimento):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.PROTECT)
-    frequencia = models.IntegerField()
-    nota = models.DecimalField(max_digits=3, decimal_places=1)
+    frequencia = models.IntegerField(blank=True, null=True)
+    nota = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        blank=True,
+        null=True)
     turma = models.CharField(max_length=10)
+
+    class Meta:
+        verbose_name_plural = "requerimento alterações"
 
 class RequerimentoMatricula(Requerimento):
     disciplinas = models.ManyToManyField(Disciplina, through='ParecerDisciplina')
@@ -66,7 +79,11 @@ class RequerimentoOutros(Requerimento):
         choices=OPCOES_DO_PARECER,
         default=PENDENTE,
     )
-    solicitacao = models.TextField()
+    solicitacao = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = "requerimento outros"
+
 RequerimentoRecurso = RequerimentoOutros
 RequerimentoTrancamento = RequerimentoOutros
 
