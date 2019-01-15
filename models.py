@@ -43,18 +43,34 @@ class Unidade(models.Model):
     def __str__(self):
         return self.nome
 
+class ProtocoloAvulso(models.Model):
+    data_saida = models.DateTimeField(auto_now=True)
+    secao = models.CharField(max_length=255)
+    unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
+
+    class Meta:
+        verbose_name_plural = "protocolos avulsos"
+
+    def __str__(self):
+        return "%s - %s - %s" % (
+            str(self.id),
+            self.unidade.nome,
+            self.secao
+        )
+
 class Requerimento(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT)
     # implementaremos auto_now=True no save()
     data_entrada = models.DateTimeField(editable=False)
     data_parecer = models.DateTimeField(blank=True, null=True)
-    data_saida = models.DateTimeField(blank=True, null=True)
     docente = models.ForeignKey(Docente, on_delete=models.PROTECT)
     # implementaremos unicidade anual no save()
     indice_anual = models.PositiveIntegerField(editable=False)
     observacao = models.TextField(blank=True)
+    protocolo_avulso = models.ForeignKey(ProtocoloAvulso, on_delete=models.PROTECT)
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
-    
+
+    # está vulnerável a race conditions! 
     def save(self, *args, **kwargs):
         if not self.data_entrada:
             self.data_entrada = timezone.now()
@@ -65,6 +81,7 @@ class Requerimento(models.Model):
                 self.indice_anual = ultimo.indice_anual + 1
             else:
                 self.indice_anual = 1
+        
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -120,5 +137,3 @@ class ParecerDisciplina(models.Model):
     requerimento = models.ForeignKey(RequerimentoMatricula, on_delete=models.PROTECT)
     turma = models.CharField(max_length=10)
 
-class ProtocoloAvulso(models.Model):
-   pass 
