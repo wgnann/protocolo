@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
     
 DEFERIDO = 'D'
 INDEFERIDO = 'I'
@@ -30,7 +31,10 @@ class Disciplina(models.Model):
     sigla = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.nome
+        return "%s - %s" % (
+            self.sigla,
+            self.nome
+        )
 
 class Unidade(models.Model):
     nome = models.CharField(max_length=20)
@@ -44,6 +48,7 @@ class Requerimento(models.Model):
     data_parecer = models.DateTimeField(blank=True, null=True)
     data_saida = models.DateTimeField(blank=True, null=True)
     docente = models.ForeignKey(Docente, on_delete=models.PROTECT)
+    indice_anual = models.PositiveIntegerField()
     observacao = models.TextField(blank=True)
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
     
@@ -51,19 +56,25 @@ class Requerimento(models.Model):
         abstract = True
 
     def __str__(self):
-        return "%s - %s - %s"%(
+        return "%s - %s - %s" % (
             self.aluno.nusp,
             self.aluno.nome,
-            self.data_entrada.date())
+            self.data_entrada.date()
+    )
 
 class RequerimentoAlteracao(Requerimento):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.PROTECT)
-    frequencia = models.IntegerField(blank=True, null=True)
+    frequencia = models.IntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        blank=True,
+        null=True
+    )
     nota = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         blank=True,
-        null=True)
+        null=True
+    )
     turma = models.CharField(max_length=10)
 
     class Meta:
@@ -97,5 +108,5 @@ class ParecerDisciplina(models.Model):
     requerimento = models.ForeignKey(RequerimentoMatricula, on_delete=models.PROTECT)
     turma = models.CharField(max_length=10)
 
-    def __str__(self):
-       return self.disciplina 
+class ProtocoloAvulso(models.Model):
+   pass 
