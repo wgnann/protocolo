@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
     
 DEFERIDO = 'D'
@@ -44,16 +45,27 @@ class Unidade(models.Model):
 
 class Requerimento(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.PROTECT)
-    data_entrada = models.DateTimeField(auto_now=True)
+    # implementaremos auto_now=True no save()
+    data_entrada = models.DateTimeField(editable=False)
     data_parecer = models.DateTimeField(blank=True, null=True)
     data_saida = models.DateTimeField(blank=True, null=True)
     docente = models.ForeignKey(Docente, on_delete=models.PROTECT)
-    indice_anual = models.PositiveIntegerField()
+    # implementaremos unicidade anual no save()
+    indice_anual = models.PositiveIntegerField(editable=False)
     observacao = models.TextField(blank=True)
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
     
-    class Meta:
-        abstract = True
+    def save(self, *args, **kwargs):
+        if not self.data_entrada:
+            self.data_entrada = timezone.now()
+
+        if not self.indice_anual:
+            ultimo = Requerimento.objects.filter(data_entrada__year = self.data_entrada.year).order_by('indice_anual').last()
+            if ultimo:
+                self.indice_anual = ultimo.indice_anual + 1
+            else:
+                self.indice_anual = 1
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return "%s - %s - %s" % (
