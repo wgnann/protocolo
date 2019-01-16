@@ -67,7 +67,12 @@ class Requerimento(models.Model):
     # implementaremos unicidade anual no save()
     indice_anual = models.PositiveIntegerField(editable=False)
     observacao = models.TextField(blank=True)
-    protocolo_avulso = models.ForeignKey(ProtocoloAvulso, on_delete=models.PROTECT)
+    protocolo_avulso = models.ForeignKey(
+        ProtocoloAvulso,
+        on_delete=models.SET_NULL,
+        blank = True,
+        null = True
+    )
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
 
     # está vulnerável a race conditions! 
@@ -134,6 +139,6 @@ class ParecerDisciplina(models.Model):
         choices=OPCOES_DO_PARECER,
         default=PENDENTE,
     )
-    requerimento = models.ForeignKey(RequerimentoMatricula, on_delete=models.PROTECT)
+    requerimento = models.ForeignKey(RequerimentoMatricula, on_delete=models.CASCADE)
     turma = models.CharField(max_length=10)
 
