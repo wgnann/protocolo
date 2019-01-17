@@ -98,7 +98,7 @@ class Requerimento(models.Model):
     def tipo(self):
         for subclasse in Requerimento.__subclasses__():
             try:
-                return getattr(self, subclasse.__name__.lower())
+                return getattr(self, subclasse._meta.model_name)
             except:
                 pass
 
