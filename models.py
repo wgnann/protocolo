@@ -3,7 +3,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.urls import reverse
 from django.utils import timezone
-    
+
 DEFERIDO = 'D'
 INDEFERIDO = 'I'
 PENDENTE = 'P'
@@ -94,6 +94,13 @@ class Requerimento(models.Model):
                 self.indice_anual = 1
         
         super().save(*args, **kwargs)
+
+    def tipo(self):
+        for subclasse in Requerimento.__subclasses__():
+            try:
+                return getattr(self, subclasse.__name__.lower())
+            except:
+                pass
 
     def __str__(self):
         return "%s - %s - %s" % (
