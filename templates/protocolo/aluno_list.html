@@ -1,0 +1,25 @@
+{% extends 'protocolo/base.html' %}
+
+{% block content %}
+  <h1 class="page-header">Alunos</h1>
+  <table class="table" id="aluno-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>NUSP</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aluno in object_list %}
+        <tr>
+          <td>{{ aluno.nome }}</td>
+          <td>{{ aluno.nusp }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2" class="text-center bg-warning">Nenhum!</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

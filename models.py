@@ -1,6 +1,8 @@
 from django.db import models
-from django.utils import timezone
+
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.urls import reverse
+from django.utils import timezone
     
 DEFERIDO = 'D'
 INDEFERIDO = 'I'
@@ -22,7 +24,8 @@ class PessoaUSP(models.Model):
         return self.nome
 
 class Aluno(PessoaUSP):
-    pass
+    def get_absolute_url(self):
+        return reverse('aluno_info', kwargs={'pk': self.pk })
 
 class Docente(PessoaUSP):
     departamento = models.CharField(max_length = 10)
@@ -74,6 +77,9 @@ class Requerimento(models.Model):
         null = True
     )
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
+
+    def get_absolute_url(self):
+        return reverse('requerimento_info', kwargs={'pk': self.pk })
 
     # está vulnerável a race conditions! 
     def save(self, *args, **kwargs):
