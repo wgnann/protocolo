@@ -1,0 +1,25 @@
+{% extends 'protocolo/base.html' %}
+
+{% block content %}
+  <h1 class="page-header">Requerimentos</h1>
+  <table class="table" id="aluno-table">
+    <thead>
+      <tr>
+        <th>Requerimento</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for requerimento in object_list %}
+        <tr>
+          <td><a href="{% url 'requerimento_info' requerimento.id %}">{{ requerimento.data_entrada|date:"Y" }} - {{ requerimento.indice_anual }} - {{ requerimento.aluno }}</a></td>
+          <td></td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2" class="text-center bg-warning">Nenhum!</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
