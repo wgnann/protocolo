@@ -3,10 +3,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1 class="page-header">Adicionar Requerimento de Matrícula</h1>
   <form method="post">
     {% crispy form helper %}
-    {% crispy formset helperset %}
+    {% block forms %}
+    {% endblock forms %}
     <button type="submit" class="btn btn-success">Salvar</button>
   </form>
 {% endblock content %}

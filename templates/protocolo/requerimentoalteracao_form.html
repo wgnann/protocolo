@@ -1,12 +1,8 @@
-{% extends 'protocolo/base.html' %}
+{% extends 'protocolo/base_form.html' %}
 
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1 class="page-header">Aluno</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" class="btn btn-success">Salvar</button>
-  </form> 
-{% endblock %}
+  <h1 class="page-header">Adicionar Requerimento de Alteração</h1>
+  {{ block.super }}
+{% endblock content %}
