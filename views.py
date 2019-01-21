@@ -1,8 +1,10 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django import forms
 
+from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, RequerimentoMatriculaForm
 from .models import Aluno, Requerimento, RequerimentoAlteracao
 
 def index(request):
@@ -36,4 +38,23 @@ def requerimento_info(request, pk):
     requerimento = parent.tipo()
     context = {'requerimento': requerimento}
     template = "protocolo/"+requerimento._meta.model_name+"_detail.html"
+    return render(request, template, context)
+
+def requerimentomatricula_novo(request):
+    if request.method == 'POST':
+        form = RequerimentoMatriculaForm(request.POST)
+        formset = ParecerDisciplinaFormset(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            requerimento = form.save()
+            formset.instance = requerimento
+            formset.save()
+            return redirect(requerimento.get_absolute_url())
+    else:
+        form = RequerimentoMatriculaForm()
+        formset = ParecerDisciplinaFormset()
+
+    helper = ParecerDisciplinaFormsetHelper()
+    context = {'form': form, 'formset': formset, 'helper': helper}
+    template = "protocolo/requerimentomatricula_form.html"
     return render(request, template, context)

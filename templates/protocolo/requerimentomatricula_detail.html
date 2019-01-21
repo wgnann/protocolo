@@ -1,7 +1,7 @@
 {% extends 'protocolo/base.html' %}
 
 {% block content %}
-  <h1 class="page-header">Requerimento de Alteração</h1>
+  <h1 class="page-header">Requerimento de Matrícula</h1>
   <div class="row">
     <div class="col">
       <h2>{{ requerimento.data_entrada|date:"Y" }} - {{ requerimento.indice_anual }}</h2>
@@ -13,8 +13,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="col">
-      <p>Disciplina: {{ requerimento.disciplina }}</p>
-    </div>
+    {% for disciplina in requerimento.disciplinas.all %}
+        <div class="col">
+          <p>{{ disciplina }}</p>
+        </div>
+    {% endfor %}
   </div>
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'protocolo/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h1 class="page-header">Adicionar Requerimento de Matrícula</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    {% crispy formset helper %}
+    <button type="submit" class="btn btn-success">Salvar</button>
+  </form> 
+{% endblock %}

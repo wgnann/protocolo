@@ -12,4 +12,5 @@ urlpatterns = [
     path('requerimento/<int:pk>/', views.requerimento_info, name='requerimento_info'),
     path('requerimento/alteracao/', views.RequerimentoAlteracaoList.as_view(), name='requerimento_alteracao_lista'),
     path('requerimento/alteracao/novo/', views.RequerimentoAlteracaoCreate.as_view(), name='requerimento_alteracao_novo'),
+    path('requerimento/matricula/novo/', views.requerimentomatricula_novo, name='requerimento_matricula_novo'),
 ]
