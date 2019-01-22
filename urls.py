@@ -14,4 +14,5 @@ urlpatterns = [
     path('requerimento/alteracao/novo/', views.RequerimentoAlteracaoCreate.as_view(), name='requerimento_alteracao_novo'),
     path('requerimento/matricula/novo/', views.requerimentomatricula_novo, name='requerimento_matricula_novo'),
     path('protav/novo/', views.protocoloavulso_novo, name='protocolo_avulso_novo'),
+    path('protav/<int:pk>/', views.ProtocoloAvulsoDetail.as_view(), name='protocolo_avulso_info'),
 ]

@@ -43,14 +43,21 @@ class RequerimentoAlteracaoCreate(CrispyCreateView):
     model = RequerimentoAlteracao
     fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente']
 
-# Resto
+# DetailViews
 class AlunoDetail(DetailView):
     model = Aluno
 
+class ProtocoloAvulsoDetail(DetailView):
+    model = ProtocoloAvulso
+
+# Resto
 def protocoloavulso_novo(request):
     if request.method == 'POST':
         form = ProtocoloAvulsoForm(request.POST)
         if form.is_valid():
+            protocolo_avulso = form.save()
+            requerimentos = form.cleaned_data.get('requerimento')
+            requerimentos.update(protocolo_avulso=protocolo_avulso)
             return HttpResponse(request)
     else:
         form = ProtocoloAvulsoForm()

@@ -1,0 +1,14 @@
+{% extends 'protocolo/base.html' %}
+
+{% block content %}
+  <h1 class="page-header">Protocolo Avulso</h1>
+  <div class="row">
+    <div class="col">
+      <p>{{ protocoloavulso.secao }}</p>
+    </div>
+    <div class="col">
+      <p>{{ protocoloavulso.unidade }}</p>
+    </div>
+  </div>
+  {{ protocoloavulso.requerimento_set.all }} 
+{% endblock %}
