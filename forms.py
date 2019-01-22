@@ -31,5 +31,3 @@ class RequerimentoMatriculaForm(forms.ModelForm):
         fields = ['aluno', 'unidade', 'docente']
 
 ParecerDisciplinaFormset = inlineformset_factory(RequerimentoMatricula, ParecerDisciplina, fields = ['disciplina', 'turma', 'parecer'], extra=3, can_delete=False)
-
-RequerimentoFormset = inlineformset_factory(ProtocoloAvulso, Requerimento, fields = '__all__', extra=2, can_delete=False)
