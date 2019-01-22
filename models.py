@@ -103,9 +103,10 @@ class Requerimento(models.Model):
                 pass
 
     def __str__(self):
-        return "%s - %s - %s" % (
+        return "%s - %s - %s - %s" % (
             self.aluno.nusp,
             self.aluno.nome,
+            self.unidade.nome,
             self.data_entrada.date()
     )
 

@@ -1,11 +1,14 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django import forms
 
-from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, RequerimentoMatriculaForm
-from .models import Aluno, Requerimento, RequerimentoAlteracao
+from crispy_forms.helper import FormHelper
+
+from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, ProtocoloAvulsoForm, RequerimentoMatriculaForm
+from .models import Aluno, ProtocoloAvulso, Requerimento, RequerimentoAlteracao
 
 def index(request):
     return render(request, 'protocolo/index.html', {})
@@ -21,11 +24,22 @@ class RequerimentoAlteracaoList(ListView):
     model = RequerimentoAlteracao
 
 # CreateViews
-class AlunoCreate(CreateView):
+class CrispyCreateView(CreateView):
+    def __init__(self, *args, **kwargs):
+        super(CrispyCreateView, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+
+    def get_context_data(self, **kwargs):
+        context = super(CrispyCreateView, self).get_context_data(**kwargs)
+        context['helper'] = self.helper
+        return context
+
+class AlunoCreate(CrispyCreateView):
     model = Aluno
     fields = ['nome', 'nusp']
 
-class RequerimentoAlteracaoCreate(CreateView):
+class RequerimentoAlteracaoCreate(CrispyCreateView):
     model = RequerimentoAlteracao
     fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente']
 
@@ -33,11 +47,21 @@ class RequerimentoAlteracaoCreate(CreateView):
 class AlunoDetail(DetailView):
     model = Aluno
 
-def requerimento_info(request, pk):
-    parent = get_object_or_404(Requerimento, pk=pk)
-    requerimento = parent.tipo()
-    context = {'requerimento': requerimento}
-    template = "protocolo/"+requerimento._meta.model_name+"_detail.html"
+def protocoloavulso_novo(request):
+    if request.method == 'POST':
+        form = ProtocoloAvulsoForm(request.POST)
+        if form.is_valid():
+            return HttpResponse(request)
+    else:
+        form = ProtocoloAvulsoForm()
+
+    helper = FormHelper()
+    helper.form_tag = False
+    context = {
+        'form': form,
+        'helper': helper
+    }
+    template = "protocolo/protocoloavulso_form.html"
     return render(request, template, context)
 
 def requerimentomatricula_novo(request):
@@ -54,7 +78,22 @@ def requerimentomatricula_novo(request):
         form = RequerimentoMatriculaForm()
         formset = ParecerDisciplinaFormset()
 
-    helper = ParecerDisciplinaFormsetHelper()
-    context = {'form': form, 'formset': formset, 'helper': helper}
+    helper = FormHelper()
+    helper.form_tag = False
+    helperset = ParecerDisciplinaFormsetHelper()
+    context = {
+        'form': form,
+        'formset': formset,
+        'helper': helper,
+        'helperset': helperset
+    }
     template = "protocolo/requerimentomatricula_form.html"
     return render(request, template, context)
+
+def requerimento_info(request, pk):
+    parent = get_object_or_404(Requerimento, pk=pk)
+    requerimento = parent.tipo()
+    context = {'requerimento': requerimento}
+    template = "protocolo/"+requerimento._meta.model_name+"_detail.html"
+    return render(request, template, context)
+
