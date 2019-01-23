@@ -3,6 +3,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1 class="page-header">Adicionar Requerimento de Alteração</h1>
+  <h1 class="page-header">Adicionar Requerimento</h1>
+  <h2>
+    {% if form.subtipo.value == "A" %}
+      Alteração de Frequência ou Nota
+    {% else %}
+      Boletim
+    {% endif %}
+  </h2>
   {{ block.super }}
 {% endblock content %}

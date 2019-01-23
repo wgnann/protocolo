@@ -4,7 +4,7 @@ from django.forms.models import inlineformset_factory
 from django_select2.forms import ModelSelect2MultipleWidget, ModelSelect2Widget
 from crispy_forms.helper import FormHelper
 
-from .models import ParecerDisciplina, ProtocoloAvulso, Requerimento, RequerimentoMatricula, Unidade
+from .models import ParecerDisciplina, ProtocoloAvulso, Requerimento, RequerimentoAlteracao, RequerimentoMatricula, Unidade
 
 class ParecerDisciplinaFormsetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
@@ -24,6 +24,12 @@ class ProtocoloAvulsoForm(forms.ModelForm):
         fields = ['unidade', 'secao', 'requerimento']
         widgets = {'unidade': ModelSelect2Widget(model=Unidade,
             search_fields=['nome__icontains'])}
+
+class RequerimentoAlteracaoForm(forms.ModelForm):
+    class Meta:
+        model = RequerimentoAlteracao
+        fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente', 'subtipo']
+        widgets = {'subtipo': forms.MultipleHiddenInput}
 
 class RequerimentoMatriculaForm(forms.ModelForm):
     class Meta:
