@@ -13,7 +13,7 @@
     <tbody>
       {% for requerimento in object_list %}
         <tr>
-          <td><a href="{% url 'requerimento_info' requerimento.id %}">{{ requerimento.data_entrada|date:"Y" }} - {{ requerimento.indice_anual }} - {{ requerimento.aluno }}</a></td>
+          <td><a href="{% url 'requerimento_alteracao_info' requerimento.id %}">{{ requerimento.data_entrada|date:"Y" }} - {{ requerimento.indice_anual }} - {{ requerimento.aluno }}</a></td>
           <td></td>
         </tr>
       {% empty %}
