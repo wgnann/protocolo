@@ -1,0 +1,49 @@
+{% extends 'protocolo/base.html' %}
+
+{% comment %}
+  blocks disponíveis:
+    head
+    content
+      page-header
+      table
+        item
+    body    
+{% endcomment %}
+
+{% block content %}
+  {% block page-header %}
+    <h1 class="page-header">Requerimentos</h1>
+  {% endblock page-header %}
+  {% block table %}
+    <table class="table" id="aluno-table">
+      <thead>
+        <tr>
+          <th>Requerimento</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for requerimento in object_list %}
+          <tr>
+            <td>
+              {% block item %}
+                <a href="{% url 'requerimento_info' requerimento.id %}">
+                {{ requerimento.data_entrada|date:"Y" }} - {{ requerimento.indice_anual }} - {{ requerimento.aluno }}
+                </a>
+              {% endblock item%}
+            </td>
+            <td>
+              <button type="button" class="btn btn-primary">
+                <span class="fas fa-edit"></span>
+              </button>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="2" class="text-center bg-warning">Nenhum!</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endblock table %}
+{% endblock content %}

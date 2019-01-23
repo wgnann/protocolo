@@ -78,9 +78,6 @@ class Requerimento(models.Model):
     )
     unidade = models.ForeignKey(Unidade, on_delete=models.PROTECT)
 
-    def get_absolute_url(self):
-        return reverse('requerimento_info', kwargs={'pk': self.pk })
-
     # está vulnerável a race conditions! 
     def save(self, *args, **kwargs):
         if not self.data_entrada:
@@ -138,6 +135,9 @@ class RequerimentoAlteracao(Requerimento):
     )
     turma = models.CharField(max_length=10)
 
+    def get_absolute_url(self):
+        return reverse('requerimento_alteracao_info', kwargs={'pk': self.pk })
+
     class Meta:
         verbose_name_plural = "requerimento alterações"
 
@@ -155,6 +155,9 @@ class RequerimentoMatricula(Requerimento):
         default=MATRICULA,
         max_length=2,
     )
+
+    def get_absolute_url(self):
+        return reverse('requerimento_matricula_info', kwargs={'pk': self.pk })
 
 class RequerimentoOutros(Requerimento):
     OUTROS = 'O'
@@ -176,6 +179,9 @@ class RequerimentoOutros(Requerimento):
         default=OUTROS,
         max_length=2,
     )
+
+    def get_absolute_url(self):
+        return reverse('requerimento_outros_info', kwargs={'pk': self.pk })
 
     class Meta:
         verbose_name_plural = "requerimento outros"

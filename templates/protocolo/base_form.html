@@ -1,5 +1,14 @@
 {% extends 'protocolo/base.html' %}
 
+{% comment %}
+  blocks disponíveis
+    head
+    content
+      page-header
+      form
+    body
+{% endcomment %}
+
 {% load crispy_forms_tags %}
 {% load static %}
 
@@ -9,12 +18,13 @@
 {% endblock head %}
 
 {% block content %}
-  <form method="post">
-    {% crispy form helper %}
-    {% block forms %}
-    {% endblock forms %}
-    <button type="submit" class="btn btn-success">Salvar</button>
-  </form>
+  {% block page-header %}{% endblock page-header %}
+  {% block form %}
+    <form method="post">
+      {% crispy form helper %}
+      <button type="submit" class="btn btn-success">Salvar</button>
+    </form>
+  {% endblock form %}
 {% endblock content %}
 
 {% block body %}

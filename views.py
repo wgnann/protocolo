@@ -7,21 +7,9 @@ from django import forms
 
 from crispy_forms.helper import FormHelper
 
-from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, ProtocoloAvulsoForm, RequerimentoAlteracaoForm, RequerimentoMatriculaForm
-from .models import Aluno, ProtocoloAvulso, Requerimento, RequerimentoAlteracao, RequerimentoMatricula
+from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, ProtocoloAvulsoForm, RequerimentoAlteracaoForm, RequerimentoMatriculaForm, RequerimentoOutrosForm
+from .models import Aluno, ProtocoloAvulso, Requerimento, RequerimentoAlteracao, RequerimentoMatricula, RequerimentoOutros
 
-def index(request):
-    return render(request, 'protocolo/index.html', {})
-
-# ListViews
-class AlunoList(ListView):
-    model = Aluno
-
-class RequerimentoList(ListView):
-    model = Requerimento
-
-class RequerimentoAlteracaoList(ListView):
-    model = RequerimentoAlteracao
 
 # CrispyViews
 def CrispyFactory(Class):
@@ -40,6 +28,7 @@ def CrispyFactory(Class):
 CrispyCreateView = CrispyFactory(CreateView)
 CrispyUpdateView = CrispyFactory(UpdateView)
 
+
 # CreateViews
 class AlunoCreate(CrispyCreateView):
     model = Aluno
@@ -47,8 +36,14 @@ class AlunoCreate(CrispyCreateView):
 
 class RequerimentoAlteracaoCreate(CrispyCreateView):
     model = RequerimentoAlteracao
-    extra_context = {'tipo': 'tipo'}
     form_class = RequerimentoAlteracaoForm
+
+#RequerimentoMatriculaCreate = requerimentomatricula_novo
+
+class RequerimentoOutrosCreate(CrispyCreateView):
+    model = RequerimentoOutros
+    form_class = RequerimentoOutrosForm 
+
 
 # DetailViews
 class AlunoDetail(DetailView):
@@ -60,13 +55,42 @@ class RequerimentoAlteracaoDetail(DetailView):
 class RequerimentoMatriculaDetail(DetailView):
     model = RequerimentoMatricula
 
+class RequerimentoOutrosDetail(DetailView):
+    model = RequerimentoOutros
+
 class ProtocoloAvulsoDetail(DetailView):
     model = ProtocoloAvulso
 
-# Resto
+
+# ListViews
+class AlunoList(ListView):
+    model = Aluno
+
+class RequerimentoList(ListView):
+    model = Requerimento
+
+class RequerimentoAlteracaoList(ListView):
+    model = RequerimentoAlteracao
+
+class RequerimentoMatriculaList(ListView):
+    model = RequerimentoMatricula
+
+class RequerimentoOutrosList(ListView):
+    model = RequerimentoOutros
+
+
+# UpdateViews
 class RequerimentoAlteracaoUpdate(CrispyUpdateView):
     model = RequerimentoAlteracao
     fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente']
+
+class RequerimentoOutrosUpdate(CrispyUpdateView):
+    model = RequerimentoOutros
+    fields = '__all__'
+
+# Resto
+def index(request):
+    return render(request, 'protocolo/index.html', {})
 
 def protocoloavulso_novo(request):
     if request.method == 'POST':
@@ -117,7 +141,5 @@ def requerimentomatricula_novo(request):
 def requerimento_info(request, pk):
     parent = get_object_or_404(Requerimento, pk=pk)
     requerimento = parent.tipo()
-    context = {'requerimento': requerimento}
-    template = "protocolo/"+requerimento._meta.model_name+"_detail.html"
-    return render(request, template, context)
+    return redirect(requerimento.get_absolute_url())
 
