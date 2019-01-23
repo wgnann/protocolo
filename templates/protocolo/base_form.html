@@ -1,6 +1,12 @@
 {% extends 'protocolo/base.html' %}
 
 {% load crispy_forms_tags %}
+{% load static %}
+
+{% block head %}
+  {{ form.media.css }}
+  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+{% endblock head %}
 
 {% block content %}
   <form method="post">
@@ -10,3 +16,7 @@
     <button type="submit" class="btn btn-success">Salvar</button>
   </form>
 {% endblock content %}
+
+{% block body %}
+  {{ form.media.js }}
+{% endblock body %}
