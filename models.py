@@ -95,6 +95,7 @@ class Requerimento(models.Model):
         
         super().save(*args, **kwargs)
 
+    # note que não poderemos ter mais de um grau de herança
     def tipo(self):
         for subclasse in Requerimento.__subclasses__():
             try:
@@ -111,6 +112,13 @@ class Requerimento(models.Model):
     )
 
 class RequerimentoAlteracao(Requerimento):
+    ALTERACAO = 'A'
+    BOLETIM = 'B'
+    TIPO = (
+        (ALTERACAO, 'Alteração de Frequência e Nota'),
+        (BOLETIM, 'Boletim'),
+    )
+
     disciplina = models.ForeignKey(Disciplina, on_delete=models.PROTECT)
     frequencia = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
@@ -123,35 +131,61 @@ class RequerimentoAlteracao(Requerimento):
         blank=True,
         null=True
     )
+    subtipo = models.CharField(
+        choices=TIPO,
+        default=ALTERACAO,
+        max_length=2,
+    )
     turma = models.CharField(max_length=10)
 
     class Meta:
         verbose_name_plural = "requerimento alterações"
 
 class RequerimentoMatricula(Requerimento):
+    DISPENSA = 'D'
+    MATRICULA = 'M'
+    TIPO = (
+        (DISPENSA, 'Dispensa'),
+        (MATRICULA, 'Matrícula'),
+    )
+
     disciplinas = models.ManyToManyField(Disciplina, through='ParecerDisciplina')
-RequerimentoDispensa = RequerimentoMatricula
+    subtipo = models.CharField(
+        choices=TIPO,
+        default=MATRICULA,
+        max_length=2,
+    )
 
 class RequerimentoOutros(Requerimento):
+    OUTROS = 'O'
+    RECURSO = 'R'
+    TRANCAMENTO = 'T'
+    TIPO = (
+        (OUTROS, 'Outros'),
+        (RECURSO, 'Recurso'),
+        (TRANCAMENTO, 'Trancamento'),
+    )
     parecer = models.CharField(
-        max_length=2,
         choices=OPCOES_DO_PARECER,
         default=PENDENTE,
+        max_length=2,
     )
     solicitacao = models.TextField(blank=True)
+    subtipo = models.CharField(
+        choices=TIPO,
+        default=OUTROS,
+        max_length=2,
+    )
 
     class Meta:
         verbose_name_plural = "requerimento outros"
 
-RequerimentoRecurso = RequerimentoOutros
-RequerimentoTrancamento = RequerimentoOutros
-
 class ParecerDisciplina(models.Model):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.PROTECT)
     parecer = models.CharField(
-        max_length=2,
         choices=OPCOES_DO_PARECER,
         default=PENDENTE,
+        max_length=2,
     )
     requerimento = models.ForeignKey(RequerimentoMatricula, on_delete=models.CASCADE)
     turma = models.CharField(max_length=10)
