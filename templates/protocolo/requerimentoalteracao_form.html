@@ -10,3 +10,28 @@
     {% endif %}
   </h2>
 {% endblock page-header %}
+
+{% block object %}
+  {% if object %}
+    <div class="row">
+      <div class="col">
+        <h3>
+          {{ object.data_entrada|date:"Y" }} -
+          #{{ object.indice_anual }}
+        </h3>
+      </div>
+      <div class="col">
+        <h3>{{ object.aluno }}</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p>Disciplina: {{ object.disciplina.sigla }}</p>
+      </div>
+      <div class="col">
+        <p>Turma: {{ object.turma }}</p>
+      </div>
+    </div>
+    <p>Professor: {{ object.docente }}</p>
+  {% endif %}
+{% endblock object %}

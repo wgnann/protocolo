@@ -82,11 +82,12 @@ class RequerimentoOutrosList(ListView):
 # UpdateViews
 class RequerimentoAlteracaoUpdate(CrispyUpdateView):
     model = RequerimentoAlteracao
-    fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente']
+    fields = ['nota', 'frequencia', 'observacao']
 
 class RequerimentoOutrosUpdate(CrispyUpdateView):
     model = RequerimentoOutros
     fields = '__all__'
+
 
 # Resto
 def index(request):
@@ -111,6 +112,7 @@ def protocoloavulso_novo(request):
     }
     template = "protocolo/protocoloavulso_form.html"
     return render(request, template, context)
+
 
 def requerimentomatricula_novo(request):
     if request.method == 'POST':
