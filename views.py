@@ -1,14 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django import forms
 
 from crispy_forms.helper import FormHelper
 
-from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, ProtocoloAvulsoForm, RequerimentoMatriculaForm
-from .models import Aluno, ProtocoloAvulso, Requerimento, RequerimentoAlteracao
+from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, ProtocoloAvulsoForm, RequerimentoAlteracaoForm, RequerimentoMatriculaForm
+from .models import Aluno, ProtocoloAvulso, Requerimento, RequerimentoAlteracao, RequerimentoMatricula
 
 def index(request):
     return render(request, 'protocolo/index.html', {})
@@ -23,34 +23,51 @@ class RequerimentoList(ListView):
 class RequerimentoAlteracaoList(ListView):
     model = RequerimentoAlteracao
 
+# CrispyViews
+def CrispyFactory(Class):
+    class CrispyGeneric(Class):
+        def __init__(self, *args, **kwargs):
+            super(CrispyGeneric, self).__init__(*args, **kwargs)
+            self.helper = FormHelper()
+            self.helper.form_tag = False
+
+        def get_context_data(self, **kwargs):
+            context = super(CrispyGeneric, self).get_context_data(**kwargs)
+            context['helper'] = self.helper
+            return context
+    return CrispyGeneric
+
+CrispyCreateView = CrispyFactory(CreateView)
+CrispyUpdateView = CrispyFactory(UpdateView)
+
 # CreateViews
-class CrispyCreateView(CreateView):
-    def __init__(self, *args, **kwargs):
-        super(CrispyCreateView, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = False
-
-    def get_context_data(self, **kwargs):
-        context = super(CrispyCreateView, self).get_context_data(**kwargs)
-        context['helper'] = self.helper
-        return context
-
 class AlunoCreate(CrispyCreateView):
     model = Aluno
     fields = ['nome', 'nusp']
 
 class RequerimentoAlteracaoCreate(CrispyCreateView):
     model = RequerimentoAlteracao
-    fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente']
+    extra_context = {'tipo': 'tipo'}
+    form_class = RequerimentoAlteracaoForm
 
 # DetailViews
 class AlunoDetail(DetailView):
     model = Aluno
 
+class RequerimentoAlteracaoDetail(DetailView):
+    model = RequerimentoAlteracao
+
+class RequerimentoMatriculaDetail(DetailView):
+    model = RequerimentoMatricula
+
 class ProtocoloAvulsoDetail(DetailView):
     model = ProtocoloAvulso
 
 # Resto
+class RequerimentoAlteracaoUpdate(CrispyUpdateView):
+    model = RequerimentoAlteracao
+    fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente']
+
 def protocoloavulso_novo(request):
     if request.method == 'POST':
         form = ProtocoloAvulsoForm(request.POST)
