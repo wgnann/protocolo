@@ -33,9 +33,9 @@
               {% endblock item%}
             </td>
             <td>
-              <button type="button" class="btn btn-primary">
+              <a href="{% url 'requerimento_parecer' requerimento.id %}" class="btn btn-primary">
                 <span class="fas fa-edit"></span>
-              </button>
+              </a>
             </td>
           </tr>
         {% empty %}

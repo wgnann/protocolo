@@ -14,9 +14,10 @@ urlpatterns = [
     path('aluno/<int:pk>/', views.AlunoDetail.as_view(), name='aluno_info'),
 
     # requerimento genérico
-    path('requerimento/', views.RequerimentoList.as_view(), name='requerimento_lista'),
     path('requerimento/<int:pk>/', views.requerimento_info, name='requerimento_info'),
+    path('requerimento/', views.RequerimentoList.as_view(), name='requerimento_lista'),
     path('requerimento/busca/', FilterView.as_view(filterset_class=RequerimentoFilter), name='requerimento_busca'),
+    path('requerimento/<int:pk>/parecer/', views.requerimento_parecer, name='requerimento_parecer'),
 
     # requerimento matrícula
     path('requerimento/matricula/novo/', views.requerimentomatricula_novo, name='requerimento_matricula_novo'),

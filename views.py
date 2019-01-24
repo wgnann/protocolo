@@ -146,3 +146,7 @@ def requerimento_info(request, pk):
     requerimento = parent.tipo()
     return redirect(requerimento.get_absolute_url())
 
+def requerimento_parecer(request, pk):
+    parent = get_object_or_404(Requerimento, pk=pk)
+    requerimento = parent.tipo()
+    return redirect(requerimento.parecer_url())

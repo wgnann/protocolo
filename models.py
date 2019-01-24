@@ -139,6 +139,9 @@ class RequerimentoAlteracao(Requerimento):
     def get_absolute_url(self):
         return reverse('requerimento_alteracao_info', kwargs={'pk': self.pk })
 
+    def parecer_url(self):
+        return reverse('requerimento_alteracao_parecer', kwargs={'pk': self.pk})
+
     class Meta:
         verbose_name_plural = "requerimento alterações"
 
@@ -159,6 +162,9 @@ class RequerimentoMatricula(Requerimento):
 
     def get_absolute_url(self):
         return reverse('requerimento_matricula_info', kwargs={'pk': self.pk })
+
+    def parecer_url(self):
+        return reverse('requerimento_matricula_parecer', kwargs={'pk': self.pk})
 
 class RequerimentoOutros(Requerimento):
     OUTROS = 'O'
@@ -183,6 +189,9 @@ class RequerimentoOutros(Requerimento):
 
     def get_absolute_url(self):
         return reverse('requerimento_outros_info', kwargs={'pk': self.pk })
+
+    def parecer_url(self):
+        return reverse('requerimento_outros_parecer', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name_plural = "requerimento outros"
