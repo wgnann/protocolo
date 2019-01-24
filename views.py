@@ -7,7 +7,8 @@ from django import forms
 
 from crispy_forms.helper import FormHelper
 
-from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, ProtocoloAvulsoForm, RequerimentoAlteracaoForm, RequerimentoMatriculaForm, RequerimentoOutrosForm
+from .filters import RequerimentoFilter
+from .forms import ParecerDisciplinaFormset, ParecerDisciplinaFormsetHelper, ProtocoloAvulsoForm, RequerimentoAlteracaoForm, RequerimentoAlteracaoUpdateForm, RequerimentoMatriculaForm, RequerimentoOutrosForm, RequerimentoOutrosUpdateForm
 from .models import Aluno, ProtocoloAvulso, Requerimento, RequerimentoAlteracao, RequerimentoMatricula, RequerimentoOutros
 
 
@@ -82,11 +83,11 @@ class RequerimentoOutrosList(ListView):
 # UpdateViews
 class RequerimentoAlteracaoUpdate(CrispyUpdateView):
     model = RequerimentoAlteracao
-    fields = ['nota', 'frequencia', 'observacao']
+    form_class = RequerimentoAlteracaoUpdateForm
 
 class RequerimentoOutrosUpdate(CrispyUpdateView):
     model = RequerimentoOutros
-    fields = '__all__'
+    form_class = RequerimentoOutrosUpdateForm
 
 
 # Resto

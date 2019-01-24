@@ -123,8 +123,9 @@ class RequerimentoAlteracao(Requerimento):
         null=True
     )
     nota = models.DecimalField(
-        max_digits=3,
         decimal_places=1,
+        max_digits=3,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
         blank=True,
         null=True
     )

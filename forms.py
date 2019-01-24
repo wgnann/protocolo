@@ -38,6 +38,15 @@ class RequerimentoAlteracaoForm(forms.ModelForm):
         fields = ['aluno', 'unidade', 'disciplina', 'turma', 'docente', 'subtipo']
         widgets = {'subtipo': forms.HiddenInput}
 
+class RequerimentoAlteracaoUpdateForm(forms.ModelForm):
+    class Meta:
+        model = RequerimentoAlteracao
+        fields = ['nota', 'frequencia', 'observacao', 'subtipo', 'data_parecer']
+        widgets = {
+            'subtipo': forms.HiddenInput,
+            'data_parecer': forms.HiddenInput,
+        }
+
 class RequerimentoMatriculaForm(forms.ModelForm):
     class Meta:
         model = RequerimentoMatricula
@@ -49,5 +58,14 @@ class RequerimentoOutrosForm(forms.ModelForm):
         model = RequerimentoOutros
         fields = ['aluno', 'unidade', 'solicitacao', 'docente', 'subtipo']
         widgets = {'subtipo': forms.HiddenInput}
+
+class RequerimentoOutrosUpdateForm(forms.ModelForm):
+    class Meta:
+        model = RequerimentoOutros
+        fields = ['parecer', 'observacao', 'subtipo', 'data_parecer']
+        widgets = {
+            'subtipo': forms.HiddenInput,
+            'data_parecer': forms.HiddenInput,
+        }
 
 ParecerDisciplinaFormset = inlineformset_factory(RequerimentoMatricula, ParecerDisciplina, fields = ['disciplina', 'turma'], extra=3, can_delete=False)

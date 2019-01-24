@@ -1,6 +1,8 @@
 from django.urls import path
+from django_filters.views import FilterView
 
 from . import views
+from .filters import RequerimentoFilter
 
 # precisa adicionar o include no urls.py do django
 urlpatterns = [
@@ -14,10 +16,10 @@ urlpatterns = [
     # requerimento genérico
     path('requerimento/', views.RequerimentoList.as_view(), name='requerimento_lista'),
     path('requerimento/<int:pk>/', views.requerimento_info, name='requerimento_info'),
+    path('requerimento/busca/', FilterView.as_view(filterset_class=RequerimentoFilter), name='requerimento_busca'),
 
     # requerimento matrícula
     path('requerimento/matricula/novo/', views.requerimentomatricula_novo, name='requerimento_matricula_novo'),
-    path('requerimento/matricula/<int:pk>/', views.RequerimentoMatriculaDetail.as_view(), name='requerimento_matricula_info'),
 
     # protocolo avulso
     path('protav/novo/', views.protocoloavulso_novo, name='protocolo_avulso_novo'),
@@ -38,6 +40,12 @@ urlpatterns += [
     path('requerimento/boletim/<int:pk>/', views.RequerimentoAlteracaoDetail.as_view(), name='requerimento_boletim_info'),
     path('requerimento/boletim/', views.RequerimentoAlteracaoList.as_view(), name='requerimento_boletim_lista'),
     path('requerimento/boletim/<int:pk>/parecer/', views.RequerimentoAlteracaoUpdate.as_view(initial={'subtipo':'B'}), name='requerimento_boletim_parecer'),
+]
+
+#requerimento_matricula
+urlpatterns += [
+    path('requerimento/matricula/<int:pk>/', views.RequerimentoMatriculaDetail.as_view(), name='requerimento_matricula_info'),
+    path('requerimento/matricula/', views.RequerimentoMatriculaList.as_view(), name='requerimento_matricula_lista'),
 ]
 
 #requerimento_outros
