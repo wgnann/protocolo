@@ -1,6 +1,9 @@
 # o que é
 Esta é uma tentativa de escrever um substituto para um sistema de protocolos.
 
+# licença
+GPLv3.
+
 # instalação
 Procedimentos para a instalação do sistema de protocolos para desenvolvimento e testes.
 
@@ -38,6 +41,7 @@ ainda no **settings.py**, substituir
     TIME_ZONE = 'America/Sao_Paulo'
 
 em **jango/jango/urls.py**, **antes** de urlpatterns importar o **include**
+
     from django.urls import path, include
 
 em **urls.py**, acrescentar **depois** de urlpatterns
@@ -50,6 +54,7 @@ em **urls.py**, acrescentar **depois** de urlpatterns
 ## outras dependências
 
 ### migrations
+
     cd venv/jango/protocolo
     mkdir -p migrations
     > migrations/__init__.py
@@ -69,6 +74,7 @@ em **urls.py**, acrescentar **depois** de urlpatterns
     python manage.py createsuperuser
 
 ## rodando
+
     cd venv/jango
     python manage.py runserver
 
